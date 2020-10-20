@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Login from "./auth/Login";
 import Registration from "./auth/Registration";
 
 class Home extends Component {
@@ -18,6 +19,7 @@ class Home extends Component {
         <h1>Home</h1>
         <h2>Status: {this.props.loggedInStatus}</h2>
         <Registration handleSuccessfulAuth={this.handleSuccessfulAuth} />
+        <Login handleSuccessfulAuth={this.handleSuccessfulAuth} />
       </div>
     );
   }
