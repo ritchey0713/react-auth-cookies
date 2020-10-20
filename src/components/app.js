@@ -21,6 +21,10 @@ export default class App extends Component {
     });
   };
 
+  handleLogout = () => {
+    this.setState({ loggedInStatus: "NOT_LOGGED_IN", user: {} });
+  };
+
   checkLoggedInStatus = () => {
     axios
       .get("http://localhost:3001/logged_in", {
@@ -64,6 +68,7 @@ export default class App extends Component {
                   {...props}
                   handleLogin={this.handleLogin}
                   loggedInStatus={this.state.loggedInStatus}
+                  handleLogout={this.handleLogout}
                 />
               )}
             />
