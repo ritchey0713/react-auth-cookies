@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Login from "./auth/Login";
 import Registration from "./auth/Registration";
 import axios from "axios";
+import { logOut } from "../actions";
+import { connect } from "react-redux";
 
 class Home extends Component {
   // handleSuccessfulAuth = (data) => {
@@ -9,19 +11,11 @@ class Home extends Component {
   //   this.props.history.push("/dashboard");
   // };
 
-  // handleLogoutClick = () => {
-  //   axios
-  //     .delete("http://localhost:3001/logout", { withCredentials: true })
-  //     .then((resp) => {
-  //       this.props.handleLogout();
-  //     })
-  //     .catch((e) => {
-  //       console.log("LOG OUT ERR", e);
-  //     });
-  // };
+  handleLogoutClick = () => {
+    this.props.logOut();
+  };
 
   render() {
-    console.log("HOME", this.props);
     return (
       <div>
         <h1>Home</h1>
@@ -34,4 +28,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default connect(null, { logOut })(Home);

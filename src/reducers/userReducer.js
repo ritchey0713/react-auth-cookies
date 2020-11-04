@@ -17,6 +17,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         currentUser: action.payload.user,
         loggedIn: action.payload.logged_in,
       };
+    case "LOG_IN":
+      return {
+        ...state,
+        currentUser: action.payload.user,
+        loggedIn: action.payload.logged_in,
+      };
+    case "LOG_OUT":
+      return INITIAL_STATE;
     default:
       return state;
   }

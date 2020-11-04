@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { logIn } from "../../actions";
+import { connect } from "react-redux";
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -14,26 +16,7 @@ export default class Login extends Component {
 
   handleSubmit = (e) => {
     const { email, password } = this.state;
-    axios
-      .post(
-        "http://localhost:3001/sessions",
-        {
-          user: {
-            email: email,
-            password: password,
-          },
-        },
-        { withCredentials: true }
-      )
-      .then((resp) => {
-        if (resp.data.logged_in) {
-          this.props.handleSuccessfulAuth(resp.data);
-        }
-      })
-      .catch((e) => {
-        console.log("LOG IN ERR", e);
-      });
-
+    this.props.logIn(this.state);
     e.preventDefault();
     console.log("submitted form!");
     this.setState({
@@ -76,3 +59,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default connect(null, { logIn })(Login);

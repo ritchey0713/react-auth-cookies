@@ -31,60 +31,53 @@ const updateUserStatus = (data) => ({
   payload: data,
 });
 
-// const checkLoggedInStatus = () => {
-//   axios
-//     .get("http://localhost:3001/logged_in", {
-//       withCredentials: true,
-//     })
-//     .then((resp) => {
-//       if (
-//         resp.data.logged_in &&
-//         this.state.loggedInStatus === "NOT_LOGGED_IN"
-//       ) {
-//         this.setState({
-//           loggedInStatus: "LOGGED_IN",
-//           user: resp.data.user,
-//         });
-//       } else if (
-//         !resp.data.logged_in &&
-//         this.state.loggedInStatus === "LOGGED_IN"
-//       ) {
-//         this.setState({ loggedInStatus: "NOT_LOGGED_IN", user: {} });
-//       }
-//     })
-//     .catch((e) => {
-//       "logged in? error", e;
-//     });
-// };
+export const logOut = () => {
+  return (dispatch) => {
+    fetch("http://localhost:3001/logout", {
+      method: "DELETE",
+      credentials: "include",
+    }).then(() => dispatch(finishLogout()));
+  };
+};
+
+const finishLogout = () => ({
+  type: "LOG_OUT",
+});
+
+export const logIn = (data) => {
+  return () => {
+    fetch("http://localhost:3001/sessions", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then((resp) => resp.json())
+      .then((json) => dispatch(finishLogIn(json)));
+  };
+};
+
+const finishLogIn = (data) => ({
+  type: "LOG_IN",
+  payload: data,
+});
 
 // axios
 //   .post(
-//     "http://localhost:3001/registrations",
+//     "http://localhost:3001/sessions",
 //     {
 //       user: {
 //         email: email,
 //         password: password,
-//         password_confirmation: passwordConfirmation,
 //       },
 //     },
 //     { withCredentials: true }
 //   )
 //   .then((resp) => {
-//     if (resp.data.status === "created") {
+//     if (resp.data.logged_in) {
 //       this.props.handleSuccessfulAuth(resp.data);
 //     }
 //   })
 //   .catch((e) => {
-//     console.log("ERR", e);
+//     console.log("LOG IN ERR", e);
 //   });
-
-// export const handleLogin = (data) => {
-//   // this.setState({
-//   //   loggedInStatus: "LOGGED_IN",
-//   //   user: data.user,
-//   // });
-// };
-
-// export const handleLogout = () => {
-//   this.setState({ loggedInStatus: "NOT_LOGGED_IN", user: {} });
-// };
