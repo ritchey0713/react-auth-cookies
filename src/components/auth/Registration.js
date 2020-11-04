@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { createUser } from "../../actions/index";
+import { connect } from "react-redux";
 
-export default class Registration extends Component {
+class Registration extends Component {
   constructor(props) {
     super(props);
 
@@ -15,27 +17,8 @@ export default class Registration extends Component {
 
   handleSubmit = (e) => {
     const { email, password, passwordConfirmation } = this.state;
-    axios
-      .post(
-        "http://localhost:3001/registrations",
-        {
-          user: {
-            email: email,
-            password: password,
-            password_confirmation: passwordConfirmation,
-          },
-        },
-        { withCredentials: true }
-      )
-      .then((resp) => {
-        if (resp.data.status === "created") {
-          this.props.handleSuccessfulAuth(resp.data);
-        }
-      })
-      .catch((e) => {
-        console.log("ERR", e);
-      });
-
+    // send to actions
+    this.props.createUser(this.state);
     e.preventDefault();
     console.log("submitted form!");
     this.setState({
@@ -88,3 +71,5 @@ export default class Registration extends Component {
     );
   }
 }
+
+export default connect(null, { createUser })(Registration);

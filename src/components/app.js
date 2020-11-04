@@ -1,66 +1,41 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import axios from "axios";
-
+import { connect } from "react-redux";
+import { checkLoggedInStatus } from "../actions/index";
 import Dashboard from "./Dashboard.js";
+import Login from "../components/auth/Login";
 import Home from "./Home";
+import Registration from "./auth/Registration.js";
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedInStatus: "NOT_LOGGED_IN",
-      user: {},
-    };
-  }
-
-  handleLogin = (data) => {
-    this.setState({
-      loggedInStatus: "LOGGED_IN",
-      user: data.user,
-    });
-  };
-
-  handleLogout = () => {
-    this.setState({ loggedInStatus: "NOT_LOGGED_IN", user: {} });
-  };
-
-  checkLoggedInStatus = () => {
-    axios
-      .get("http://localhost:3001/logged_in", {
-        withCredentials: true,
-      })
-      .then((resp) => {
-        if (
-          resp.data.logged_in &&
-          this.state.loggedInStatus === "NOT_LOGGED_IN"
-        ) {
-          this.setState({
-            loggedInStatus: "LOGGED_IN",
-            user: resp.data.user,
-          });
-        } else if (
-          !resp.data.logged_in &&
-          this.state.loggedInStatus === "LOGGED_IN"
-        ) {
-          this.setState({ loggedInStatus: "NOT_LOGGED_IN", user: {} });
-        }
-      })
-      .catch((e) => {
-        "logged in? error", e;
-      });
-  };
-
+class App extends Component {
   componentDidMount() {
-    this.checkLoggedInStatus();
+    this.props.checkLoggedInStatus();
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="app">
         <BrowserRouter>
           <Switch>
+            <Route exact path="/new_user" component={Registration} />
+            <Route exact path="/login" component={Login} />
             <Route
+              exact
+              path={"/"}
+              render={(props) => (
+                <Home {...props} loggedInStatus={this.props.loggedInStatus} />
+              )}
+            />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
+  }
+}
+
+{
+  /* <Route
               exact
               path={"/"}
               render={(props) => (
@@ -81,10 +56,14 @@ export default class App extends Component {
                   loggedInStatus={this.state.loggedInStatus}
                 />
               )}
-            />
-          </Switch>
-        </BrowserRouter>
-      </div>
-    );
-  }
+            /> */
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user.currentUser,
+    loggedInStatus: state.user.loggedIn,
+  };
+};
+
+export default connect(mapStateToProps, { checkLoggedInStatus })(App);
